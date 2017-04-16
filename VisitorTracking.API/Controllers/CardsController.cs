@@ -23,7 +23,7 @@ namespace VisitorTracking.API.Controllers
         }
         
         [Route("")]
-        public async Task<IHttpActionResult> Post([FromBody] CardDTOs cardDTO)
+        public async Task<IHttpActionResult> Post([FromBody] CardDTO cardDTO)
         {
             if (!ModelState.IsValid)
             {

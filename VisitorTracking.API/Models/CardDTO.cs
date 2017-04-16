@@ -7,7 +7,7 @@ using VisitorTracking.DAL.Entities;
 
 namespace VisitorTracking.API.Models
 {
-    public class CardDTOs
+    public class CardDTO
     {
         [Required]
         public string VisitorFirstName { get; set; }
