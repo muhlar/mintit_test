@@ -5,7 +5,7 @@ using VisitorTracking.DAL.Entities;
 
 namespace VisitorTracking.DAL.DataContext
 {
-    class VisitorTrackingContext : DbContext
+    public class VisitorTrackingContext : DbContext
     {
         public VisitorTrackingContext()
             : base("name=VisitorTrackingConnection")

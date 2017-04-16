@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using VisitorTracking.DAL.DataContext;
 
 namespace VisitorTracking.DAL.Entities
@@ -19,7 +20,9 @@ namespace VisitorTracking.DAL.Entities
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
+
         [Required, StringLength(20)]
+        [Index(IsUnique = true)]
         public string IDCardNumber { get; set; }
     }
 }
