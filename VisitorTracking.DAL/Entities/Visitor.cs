@@ -9,11 +9,11 @@ namespace VisitorTracking.DAL.Entities
     {
         public int Id { get; set; }
 
-        [Required]
-        public string CreatedBy { get; set; }
+        //TODO make required after implementation
+        public int CreatedBy { get; set; }
         [Required]
         public DateTime CreatedOn { get; set; }
-        public string ModifiedBy { get; set; }
+        public int ModifiedBy { get; set; }
         public DateTime ModifiedOn { get; set; }
 
         [Required]

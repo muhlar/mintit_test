@@ -4,11 +4,14 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Description;
+using VisitorTracking.API.Models;
 using VisitorTracking.API.Services;
+using VisitorTracking.DAL.Entities;
 
 namespace VisitorTracking.API.Controllers
 {
-    [RoutePrefix("api/v1/Cards")]
+    [RoutePrefix("api/v1/cards")]
     public class CardsController : ApiController
     {
         private ICardsService _cardsService;
@@ -18,29 +21,42 @@ namespace VisitorTracking.API.Controllers
             _cardsService = cardsService;
         }
 
-        // GET api/values
+        // GET api/cards
+        [Route("")]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
         }
 
-        // GET api/values/5
+        // GET api/cards/5
+        [Route("id:int")]
         public string Get(int id)
         {
             return "value";
         }
 
-        // POST api/values
-        public void Post([FromBody]string value)
+        // POST api/cards
+        [Route("")]
+        public IHttpActionResult Post(CardDTO card)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var createdCard = _cardsService.RegisterCard(card.ToCard());
+
+            return Ok(createdCard.Id);
         }
 
-        // PUT api/values/5
+        // PUT api/cards/5
+        [Route("id:int")]
         public void Put(int id, [FromBody]string value)
         {
         }
 
-        // DELETE api/values/5
+        // DELETE api/cards/5
+        [Route("id:int")]
         public void Delete(int id)
         {
         }

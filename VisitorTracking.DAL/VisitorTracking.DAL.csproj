@@ -88,11 +88,5 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <Content Include="LocalDB\VisitorTracking.mdf" />
-    <Content Include="LocalDB\VisitorTracking_log.ldf">
-      <DependentUpon>VisitorTracking.mdf</DependentUpon>
-    </Content>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
