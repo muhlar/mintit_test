@@ -203,7 +203,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\CardDTO.cs" />
+    <Compile Include="Models\CardDTOs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\VisitorsService.cs" />
     <Compile Include="Services\CardsService.cs" />

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VisitorTracking.API.Models;
@@ -20,45 +21,34 @@ namespace VisitorTracking.API.Controllers
         {
             _cardsService = cardsService;
         }
-
-        // GET api/cards
+        
         [Route("")]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/cards/5
-        [Route("id:int")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/cards
-        [Route("")]
-        public IHttpActionResult Post(CardDTO card)
+        public async Task<IHttpActionResult> Post([FromBody] CardDTOs cardDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var createdCard = _cardsService.RegisterCard(card.ToCard());
+            var createdCard = await _cardsService.RegisterCard(cardDTO.ToCard());
 
             return Ok(createdCard.Id);
         }
 
-        // PUT api/cards/5
-        [Route("id:int")]
-        public void Put(int id, [FromBody]string value)
+        [Route("")]
+        public IHttpActionResult Put([FromBody] CardUpdateDTO cardDTO)
         {
-        }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        // DELETE api/cards/5
-        [Route("id:int")]
-        public void Delete(int id)
-        {
+            Card card = cardDTO.ToCard();
+
+
+            _cardsService.UpdateCard(card);
+
+            return Ok(card.Id);
         }
     }
 }

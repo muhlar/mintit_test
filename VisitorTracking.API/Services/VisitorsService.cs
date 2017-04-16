@@ -1,28 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using VisitorTracking.DAL.DataContext;
 using VisitorTracking.DAL.Entities;
+using VisitorTracking.DAL.Repositories;
 
 namespace VisitorTracking.API.Services
 {
     public interface IVisitorsService
     {
+        Task<Visitor> FindOrCreate(string firstName, string lastName, string iDCardNumber);
     }
 
     public class VisitorsService : IVisitorsService
     {
-        VisitorTrackingContext _context;
+        IVisitorsRepository _repository;
 
-        public VisitorsService(VisitorTrackingContext context)
+        public VisitorsService(IVisitorsRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
-        public Visitor CreateOrUpdate(string firstName, string lastName, string iDCardNumber)
+        public async Task<Visitor> FindOrCreate(string firstName, string lastName, string iDCardNumber)
         {
-            Visitor visitor = _context.Visitors.FirstOrDefault(v => v.IDCardNumber == iDCardNumber.Trim());
+            Visitor visitor = await _repository.GetVisitorByIDCardAsync(iDCardNumber);
 
             if (visitor == null)
             {
