@@ -31,8 +31,16 @@ namespace VisitorTracking.DAL.Entities
 
     public enum CardStates
     {
-        CheckedOut = 1,
-        CheckedIn = 2,
-        Deactivated = 3
-    }    
+        CheckedOut = 0,
+        CheckedIn = 1,
+        Deactivated = 2
+    }
+
+    public enum CardUpdateResultEnum
+    {
+        DBUpdateFailed = 0,
+        Successful = 1,
+        IsDeactivated = 2,
+        NotFound = 3
+    }
 }

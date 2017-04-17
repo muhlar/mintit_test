@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
-using VisitorTracking.DAL.DataContext;
+﻿using System.Threading.Tasks;
 using VisitorTracking.DAL.Entities;
 using VisitorTracking.DAL.Repositories;
 
@@ -12,6 +7,7 @@ namespace VisitorTracking.API.Services
     public interface IVisitorsService
     {
         Task<Visitor> FindOrCreate(string firstName, string lastName, string iDCardNumber);
+        Task<Card> GetActiveCard(Visitor visitor);
     }
 
     public class VisitorsService : IVisitorsService
@@ -35,9 +31,15 @@ namespace VisitorTracking.API.Services
             {
                 visitor.FirstName = firstName;
                 visitor.LastName = lastName;
+                await _repository.UpdateAsync(visitor);
             }
 
             return visitor;
+        }
+
+        public async Task<Card> GetActiveCard(Visitor visitor)
+        {
+            return await _repository.GetActiveCardAsync(visitor);
         }
     }
 }

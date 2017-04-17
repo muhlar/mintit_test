@@ -4,6 +4,7 @@ using Microsoft.Practices.Unity.Configuration;
 using VisitorTracking.API.Services;
 using VisitorTracking.DAL.DataContext;
 using VisitorTracking.DAL.Repositories;
+using VisitorTracking.API.Controllers;
 
 namespace VisitorTracking.API.App_Start
 {
@@ -40,11 +41,11 @@ namespace VisitorTracking.API.App_Start
 
             // TODO: Register your types here
             // container.RegisterType<IProductRepository, ProductRepository>();
-            container.RegisterType<ICardsService, CardsService>();
-            container.RegisterType<VisitorTrackingContext, VisitorTrackingContext>();
+            container.RegisterType<VisitorTrackingContext>();
             container.RegisterType<IVisitorsService, VisitorsService>();
             container.RegisterType<IVisitorsRepository, VisitorsRepository>();
             container.RegisterType<ICardsService, CardsService>();
+            container.RegisterType<ICardsRepository, CardsRepository>();
         }
     }
 }

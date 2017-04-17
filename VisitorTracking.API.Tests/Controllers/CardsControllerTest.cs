@@ -1,79 +1,95 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System;
+using System.Threading.Tasks;
+using System.Web.Http;
+using System.Web.Http.Results;
 using VisitorTracking.API.Controllers;
+using VisitorTracking.API.Models;
+using VisitorTracking.API.Services;
+using VisitorTracking.DAL.Entities;
 
 namespace VisitorTracking.API.Tests.Controllers
 {
     [TestClass]
     public class CardsControllerTest
     {
-        //CardsController _controller;
+        [TestMethod]
+        public async Task Post_ShouldReturnNotFound()
+        {
+            var cardsService = new Mock<ICardsService>();
+            var controller = new CardsController(cardsService.Object);
 
-        //public CardsControllerTest(CardsController controller)
-        //{
-        //    _controller = controller;
-        //}
+            // Act  
+            IHttpActionResult actionResult = await controller.Post(null);
 
-        //[TestMethod]
-        //public void Get()
-        //{
+            Assert.IsInstanceOfType(actionResult, typeof(InvalidModelStateResult));
+        }
 
-        //    // Act
-        //    IEnumerable<string> result = _controller.Get();
+        [TestMethod]
+        public async Task Post_ShouldReturnGuid()
+        {
+            var dto = new CardDTO { VisitorFirstName = "Marek", VisitorLastName = "Uhlar", VisitorIDCardNumber = "EU111111" };
+            var cardGuid = Guid.NewGuid();
 
-        //    // Assert
-        //    Assert.IsNotNull(result);
-        //    Assert.AreEqual(2, result.Count());
-        //    Assert.AreEqual("value1", result.ElementAt(0));
-        //    Assert.AreEqual("value2", result.ElementAt(1));
-        //}
+            var cardsService = new Mock<ICardsService>();
+            cardsService.Setup(cs => cs.RegisterCard(It.IsAny<Card>())).Returns(Task.FromResult(new Card() { CardGuid = cardGuid }));
+            var controller = new CardsController(cardsService.Object);
 
-        //[TestMethod]
-        //public void GetById()
-        //{
+            var actionResult = await controller.Post(dto);
+            var response = actionResult as OkNegotiatedContentResult<Guid>;
 
-        //    // Act
-        //    string result = _controller.Get(5);
+            Assert.IsNotNull(response);
+            Assert.AreEqual(response.Content, cardGuid);
+        }
 
-        //    // Assert
-        //    Assert.AreEqual("value", result);
-        //}
+        [TestMethod]
+        public async Task Put_ShouldReturnNotFound()
+        {
+            var dto = new CardUpdateDTO { CardGuid = Guid.NewGuid(), NewCardState = CardStates.CheckedIn };
 
-        //[TestMethod]
-        //public void Post()
-        //{
-        //    // Arrange
-        //    CardsController controller = new CardsController();
+            var cardsService = new Mock<ICardsService>();
+            cardsService.Setup(cs => cs.UpdateCard(It.IsAny<Card>())).Returns(Task.FromResult(CardUpdateResultEnum.NotFound));
+            var controller = new CardsController(cardsService.Object);
 
-        //    // Act
-        //    controller.Post("value");
+            var actionResult = await controller.Put(dto);
+            var response = actionResult as OkNegotiatedContentResult<CardUpdateResultEnum>;
 
-        //    // Assert
-        //}
+            Assert.IsNotNull(response);
+            Assert.AreEqual(response.Content, CardUpdateResultEnum.NotFound);
+        }
 
-        //[TestMethod]
-        //public void Put()
-        //{
-        //    // Arrange
-        //    CardsController controller = new CardsController();
+        [TestMethod]
+        public async Task Put_ShouldReturnSuccessful()
+        {
+            var dto = new CardUpdateDTO { CardGuid = Guid.NewGuid(), NewCardState = CardStates.CheckedIn };
 
-        //    // Act
-        //    controller.Put(5, "value");
+            var cardsService = new Mock<ICardsService>();
+            cardsService.Setup(cs => cs.UpdateCard(It.IsAny<Card>())).Returns(Task.FromResult(CardUpdateResultEnum.Successful));
+            var controller = new CardsController(cardsService.Object);
 
-        //    // Assert
-        //}
+            var actionResult = await controller.Put(dto);
+            var response = actionResult as OkNegotiatedContentResult<CardUpdateResultEnum>;
 
-        //[TestMethod]
-        //public void Delete()
-        //{
-        //    // Arrange
-        //    CardsController controller = new CardsController();
+            Assert.IsNotNull(response);
+            Assert.AreEqual(response.Content, CardUpdateResultEnum.Successful);
+        }
 
-        //    // Act
-        //    controller.Delete(5);
+        [TestMethod]
+        public async Task Put_ShouldReturnIsDeactivated()
+        {
+            var dto = new CardUpdateDTO { CardGuid = Guid.NewGuid(), NewCardState = CardStates.CheckedIn };
 
-        //    // Assert
-        //}
+            var cardsService = new Mock<ICardsService>();
+            cardsService.Setup(cs => cs.UpdateCard(It.IsAny<Card>())).Returns(Task.FromResult(CardUpdateResultEnum.IsDeactivated));
+            var controller = new CardsController(cardsService.Object);
+
+            var actionResult = await controller.Put(dto);
+            var response = actionResult as OkNegotiatedContentResult<CardUpdateResultEnum>;
+
+            Assert.IsNotNull(response);
+            Assert.AreEqual(response.Content, CardUpdateResultEnum.IsDeactivated);
+        }
+        
     }
 }
